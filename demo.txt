@@ -1,0 +1,50 @@
+﻿install.packages(“survminer”)
+install.packages("simsurv")
+install.packages("flexsurv")
+library (survminer)
+library (simsurv)
+library(flexsurv)
+
+fit_model <- flexsurv::flexsurvspline(Surv(t, x) ~ covariate, data = xxdata, k = 3)  # covariate here must be bivariate
+
+logcumhaz <- function(t, x, betas, knots) {
+  
+
+  basis <- flexsurv::basis(knots, log(t))
+  
+  # Royston and Parmar specification
+  res <- 
+    betas[["gamma0"]] * basis[[1]] + 
+    betas[["gamma1"]] * basis[[2]] +
+    betas[["gamma2"]] * basis[[3]] +
+    betas[["gamma3"]] * basis[[4]] +
+    betas[["gamma4"]] * basis[[5]] +
+    betas[["covariate"]] * x[["covariate"]] 
+  
+  res
+}
+
+covariates <- data.frame(id = 1:num of patients, hormon = rbinom(num of patients, 1, 0.5))  
+#this dataframe must be consistent with covariate in fit_model, for example in "lung", covariate "sex " takes value 1,2 so the generated covariates should be  rbinom(num of patients, 1, 0.5)+1
+
+generated_data <- simsurv(
+  betas = fit_model$coefficients, # "true" parameter values
+  x = covariates,            # covariate data for all individuals
+  knots = fit_model$knots,    # knot locations for splines
+  logcumhazard = logcumhaz,  # definition of log cum hazard
+  maxt = NULL,               # no right-censoring
+  interval = c(1E-8,100000)) # interval for root finding
+sim_data <- merge(covariates, generated_data)
+surv_your_data = survminer::surv_fit(Surv(t,x) ~ 1, data = brcancer)
+surv_sim_your_data = survminer::surv_fit(Surv(eventtime,status) ~ 1, data = generated_data)
+
+p <- ggsurvplot_combine(list(surv_your_data, surv_sim_your_data),
+                        risk.table = TRUE,
+                        conf.int = TRUE,
+                        censor = FALSE,
+                        conf.int.style = "step",
+                        tables.theme = theme_cleantable(),
+                        palette = "jco")
+
+plot.new() 
+print(p,newpage = FALSE)

@@ -1,0 +1,27 @@
+In traditional survival analysis, the Cox proportional hazards model is commonly used, which assumes that the hazard ratio between different groups remains constant over time. However, in real-world data, this assumption may not always hold, leading to potentially inaccurate results when using the Cox model.
+
+Royston and Parmar's method overcomes this issue by introducing fractional polynomials. Fractional polynomials are a type of nonlinear function that allows for more flexible fitting of data, accommodating not only linear relationships but also curved relationships. This enables the model to better capture any non-proportional hazard behavior that may exist in the survival data.
+
+The code provided enables overcome this issue by adoption of Royston and Parmar's specification. This code is an extension version for what has been done by other authors. 
+
+Simsurv is an R package used for simulating survival analysis data. The purposes of simulating survival analysis data include:
+
+1. Testing analysis methods: In situations where actual data may be insufficient or not readily available, simulated data can be used to test different survival analysis methods and models. This helps evaluate the accuracy, efficiency, and robustness of these methods and aids in selecting the most appropriate approach for specific research questions.
+
+2. Hypothesis testing: In survival analysis, hypothesis testing is often required, such as comparing two survival curves for significant differences. With simulated data, numerous simulation experiments can be conducted to evaluate the performance and statistical power of hypothesis testing procedures.
+
+3. Handling missing data: Simulated data can be employed to study methods for handling missing data. In survival analysis, missing samples are commonly encountered, and using simulated data allows exploration of various missing data handling methods and their impact on the results.
+
+In summary, using Simsurv or other simulation tools to generate survival analysis data can help researchers better comprehend survival analysis methods and techniques, assess the reliability of analysis methods, and prepare for data analysis in real research scenarios.
+
+
+This method is generally applicable except for some limitations. 
+
+1. The simulation will be inaccurate when the original sample size is small.
+
+2. The prediction effect is more ideal for bivariate covariate.
+
+References:
+Joseph Rickert. 2020. Biologically Plausible Fake Survival Data
+
+ Crowther & Lambert. 2013.Simulating biologically plausible complex survival data
